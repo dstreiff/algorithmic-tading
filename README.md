@@ -5,8 +5,8 @@ A basic automated trading system built with the ``ib_insync`` module that suppor
 [Interactive Brokers](https://www.interactivebrokers.com). 
 - The main method can be found in ``trading_system/main.py``.
 - Live ticker data is streamed from IBKR and summarized into a candlestick every $n$ seconds.
-- The modular architecture allows to conveniently define different rule based algorithms, that make decisions based on the available price data.
-- Algorithms can be defined in ``trading_system/algorithms``.
+- The modular design makes it easy to set up various rule based algorithms that make decisions based on the available price data.
+- The Algorithms can be defined in ``trading_system/algorithms``.
  
 ##  Requirements
 
@@ -15,14 +15,14 @@ A basic automated trading system built with the ``ib_insync`` module that suppor
 - IB paper or live trading account with an active market data subscription
 - Telegram messenger app
 
-Dependencies
-├──ib-insync == 0.9.80 (https://github.com/erdewit/ib_insync)
-├──plotly == 5.11.0 (https://github.com/plotly/plotly.py)
-├──pandas == 1.5.2 (https://github.com/pandas-dev/pandas)
-├──numpy == 1.23.5 (https://github.com/numpy/numpy)
-├──pyTelegramBotAPI == 4.8.0 (https://github.com/eternnoir/pyTelegramBotAPI)
-├──python-dateutil == 2.8.2 (https://github.com/dateutil/dateutil)
-└──pytz == 2022.6 (https://github.com/stub42/pytz)
+Dependencies  
+├── ib-insync == 0.9.80 (https://github.com/erdewit/ib_insync)  
+├── plotly == 5.11.0 (https://github.com/plotly/plotly.py)  
+├── pandas == 1.5.2 (https://github.com/pandas-dev/pandas)   
+├── numpy == 1.23.5 (https://github.com/numpy/numpy)  
+├── pyTelegramBotAPI == 4.8.0 (https://github.com/eternnoir/pyTelegramBotAPI)  
+├── python-dateutil == 2.8.2 (https://github.com/dateutil/dateutil)  
+└── pytz == 2022.6 (https://github.com/stub42/pytz)  
 
 ##  Setting up
 
