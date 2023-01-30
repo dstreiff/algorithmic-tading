@@ -1,0 +1,2 @@
+id,symbol,time,reason
+0,AAPL,2023-01-27 05:21:31.094393,Placed the first buy order.
