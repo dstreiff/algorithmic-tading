@@ -32,13 +32,14 @@ def plot_data(contract):
                         # fig_sellorder.data + fig_spike.data + fig_spikeO.data + fig_dip)
         
         folder = os.path.join(base_directory,"images", today)
+        if not os.path.exists(folder):
+            os.makedirs(folder)        
+        
         try:
-            fig_all.write_html(os.path.join(folder, contract.symbol +".html"))
+            fig_all.write_html(os.path.join(folder, contract.symbol + ".html"))
         except Exception as e:
-            logging.info(e)            
-            os.mkdir(folder)
-            logging.info("Created a new folder")
-            fig_all.write_html(os.path.join(folder, contract.symbol +".html"))
-    except Exception as e:
+            logging.error("Could not save the figure for contract %s.", contract.symbol)
+            logging.exception(e)   
+    except Exception as e: # Any errors while plotting the data should never terminate the whole program. 
         logging.info("Could not create the figure.")
         logging.info(e)
