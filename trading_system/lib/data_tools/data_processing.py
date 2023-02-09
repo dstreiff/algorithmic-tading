@@ -17,6 +17,7 @@ class DataProcessing():
 
 
     def request_historical_data(self, ib, contract, look_back):
+        bars = None
         try:
             bars = ib.reqHistoricalData(
                 contract,
@@ -29,31 +30,29 @@ class DataProcessing():
                 keepUpToDate = False)
         except ValueError as error: 
             logger.error(error)
-        try:
-            bars[0]
-        except:     
+            raise SystemExit(0)
+
+        if not bars or len(bars) == 0:
             logger.error('Requesting historical data failed')
-            return None
+            raise SystemExit(0)
+
         data = util.df(bars)
         data = data.drop(data[data.barCount == 0].index) 
         return data
 
 
     def read_csv_data(self, contract):
-        try:
-            file_name = config.base_directory + "/historical_data/" + contract.symbol + ".txt"
-            bars = pd.read_csv(file_name)
-            for j in range(len(bars['open'])):
-                bars['date'].iloc[j] = datetime.datetime.fromisoformat(bars['date'].iloc[j])
-            logger.info(bars.iloc[0])
-            logger.info(bars.iloc[-1])
-        except ValueError as error: 
-            logger.error(error)
-        try:
-            bars['open'][0]
-        except:     
-            logger.error('Requesting historical data failed')
-            return None
+        file_name = os.path.join(config.base_directory, "historical_data", contract.symbol + ".txt")
+        bars = pd.read_csv(file_name)
+        for j in range(len(bars['open'])):
+            bars['date'].iloc[j] = datetime.datetime.fromisoformat(bars['date'].iloc[j])
+
+        if bars.empty:
+            logger.error('No data found in %s', file_name)
+            raise SystemExit(0)
+        logger.info(bars.iloc[0])
+        logger.info(bars.iloc[-1])
+
         bars = bars.drop(bars[bars.barCount == 0].index) 
         return bars 
 
@@ -111,15 +110,17 @@ class DataProcessing():
         return
 
 
-    def add_empty_dataframe(self,symbol):
+    def add_empty_dataframe(self, symbol):
         self.ticker_data[symbol] = pd.DataFrame({'last':[],'lastbid':[],'lastask':[]})
 
 
     def save_to_csv(self,contracts):
         for contract in contracts.values():
             folder = os.path.join(config.base_directory, "historical_data", contract.symbol)
+            if not os.path.exists(folder):
+                os.makedirs(folder)    
             try:
                 contract.bars.to_csv(folder+"/"+config.today+".csv",index=False)
             except Exception as e:
-                os.mkdir(folder)
-                contract.bars.to_csv(folder+"/"+config.today+".csv",index=False)
+                logging.error("Could not save the data for contract %s.", contract.symbol)
+                logging.exception(e)  
