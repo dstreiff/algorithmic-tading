@@ -11,15 +11,21 @@ class ExitHandler:
 
     def at_exit(self):
         try:
-            TelegramBot.notify('No symbol','Application ending')
+            self.cancel_all_orders()
         except Exception as e:
-            pass
+            logging.error("Error cancelling orders:", e)
 
         try:
-            self.cancel_all_orders()
+            TelegramBot.notify('No symbol', 'Application ending')
+        except AttributeError as e:
+            logger.error("AttributeError while notifying: %s", e)
+        except ConnectionError as e:
+            logger.error("ConnectionError while notifying: %s", e)
+
+        try:
             self.ib.disconnect()
         except Exception as e:
-            pass
+            logger.error("Error while disconnecting from IB: %s", e)
 
 
     def cancel_all_orders(self):
@@ -34,7 +40,9 @@ class ExitHandler:
                 return
         try:
             logging.info('Not all orders were cancelled.') 
-            TelegramBot.notify('No symbol','Not all orders were cancelled.')
-        except Exception as e:
-            pass        
+            TelegramBot.notify('No symbol', 'Not all orders were cancelled.')
+        except AttributeError as e:
+            logger.error("AttributeError while notifying: %s", e)
+        except ConnectionError as e:
+            logger.error("ConnectionError while notifying: %s", e)      
             
