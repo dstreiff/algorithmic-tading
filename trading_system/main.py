@@ -1,23 +1,27 @@
-import parameters.config_tradingbot as config
+
 import datetime
 import time
 import os
 import atexit
-from ib_insync import IB
 import logging
+from ib_insync import IB
+
+import parameters.config_tradingbot as config
 from lib import contracts
 from lib import DataProcessing
-from lib.exit_handler import ExitHandler
 from lib import TelegramBot
-from algorithms.buy_algorithms import buy_algorithm1_realTime
-from algorithms.sell_algorithms import sell_algorithm1_realTime
-from lib.trading_signals import TradingSignals
 from lib import plot_data
 from lib import BuyOrderTracker, SellOrderTracker, ShortOrderTracker
+from lib.exit_handler import ExitHandler
+from lib.trading_signals import TradingSignals
+from algorithms.buy_algorithms import buy_algorithm1_realTime
+from algorithms.sell_algorithms import sell_algorithm1_realTime
 
 
 def create_the_logFile():
-    logging.basicConfig(filename=os.path.join(config.base_directory,"event_log.log"), level=logging.INFO)
+    logging.basicConfig(
+        filename=os.path.join(config.base_directory,"event_log.log"), 
+        level=logging.INFO)
     logging.info('Script started.')
 
 
@@ -141,7 +145,4 @@ def run_the_trading_system():
     
     
 if __name__ == "__main__":
-    try:
-        run_the_trading_system()
-    except Exception as e:
-        logging.exception(e)
+    run_the_trading_system()
